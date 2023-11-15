@@ -8,7 +8,7 @@ TILE_SET_LOCATION = "tileBaseTileset.png"
 
 class Level:
     def __init__(self):
-        self.map = numpy.load("map3.npy")
+        self.map = numpy.load("map.npy")
         print(self.map)
         self.font = pygame.font.SysFont(None, 48)
         self.backdrop = pygame.surfarray.make_surface(self.initialize_background())
@@ -23,7 +23,7 @@ class Level:
                         }
         self.facing = 0
         self.walkKeyframe = 0
-        self.coords = [0, 0]
+        self.coords = [25, 50]
         self.resize()
 
     def initialize_map():
@@ -65,28 +65,26 @@ class Level:
     def walk(self, screen):
         print(self.coords)
         if self.facing == 0:
-            self.coords[1] += 1
+            self.coords[1] += 8
         if self.facing == 1:
-            self.coords[0] += 1
+            self.coords[0] += 8
         if self.facing == 2:
-            self.coords[1] -= 1
+            self.coords[1] -= 8
         if self.facing == 3:
-            self.coords[0] -= 1
+            self.coords[0] -= 8
         self.check_for_items(screen)
 
 
     def check_for_items(self, screen):
-        all_obj = []
-        for i in range(20):
+        for i in range(34):
 #            print(i, "IIII")
-            for j in range(20):
-                obj_name = self.map[min(max(self.coords[0] + i - 8, 0), 14), min(max(self.coords[1] + (j - 8), 0), 14)]
-                if obj_name != '':
-                    all_obj.append((pygame.image.load("tileBaseTileset.png"), (self.coords[1] + i - 8, self.coords[0] + (j - 8)), self.objects[obj_name][1]))
-#        screen.blits(all_obj)
-        for i in all_obj:
-            screen.blit(i[0], (i[1][0]*10, i[1][1]*10), i[2])
-               
+            for j in range(34):
+                obj_name = self.map[min(max(self.coords[1] + i - 17, 0), 49), min(max(self.coords[0] + (j - 17), 0), 49)]
+                if self.objects[obj_name][0]:
+#                    print(j, "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
+                    self.sixteenSegment((min(max(self.coords[1] + i - 17, 0), 49) + 408 - self.coords[0], min(max(self.coords[0] + (j - 17), 0), 49) + 408 + self.coords[1]), self.objects[obj_name][1], screen)
+        self.sixteenSegment((25 + 408 - self.coords[0], 50 + 408 + self.coords[1]), pygame.Rect(384, 131, 16, 16), screen)
+        
     def sixteenSegment(self, location, object, screen):
 #        print(object)
         screen.blit(pygame.image.load("tileBaseTileset.png"), location, object)

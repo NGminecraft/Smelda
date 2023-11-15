@@ -8,8 +8,6 @@ TILE_SET_LOCATION = "tileBaseTileset.png"
 
 class Level:
     def __init__(self):
-        self.map = numpy.load("map3.npy")
-        print(self.map)
         self.font = pygame.font.SysFont(None, 48)
         self.backdrop = pygame.surfarray.make_surface(self.initialize_background())
         self.backdrop = pygame.transform.scale(self.backdrop, (816, 816))
@@ -17,17 +15,15 @@ class Level:
         self.characterE = pygame.image.load("Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkE.png")
         self.characterS = pygame.image.load("Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkS.png")
         self.characterW = pygame.image.load("Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkW.png")
-        self.objects = {"Wall": (True, pygame.Rect(384, 131, 16, 16), (20, 20)),
-                        '': (False, False),
-                        "Cabinet": (True, pygame.Rect(513, 257, 30, 30))
+        # This is essentially a giant dictionary storing every object in the game.
+        # Questionable efficiency but it works
+        # Tag: ((locations), isPNG, either file or Rect representing object in tile png, collision)
+        self.objects = {"Boulder": (((0, 0), (100, 0)), False, "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Props/PNG/sprBoulder.png", True)
                         }
         self.facing = 0
         self.walkKeyframe = 0
         self.coords = [0, 0]
         self.resize()
-
-    def initialize_map():
-        pass
 
     def resize(self):
         self.characterN = pygame.transform.scale_by(self.characterN, 3)
@@ -52,7 +48,7 @@ class Level:
         # Image is (96, 48) pixels
         rect = pygame.Rect(0, 0, 46 * 3, 46 * 3)
         test = pygame.image.load("tileBaseTileset.png")
-#        screen.blit(test, (100, 100), pygame.Rect(384, 131, 16, 16))
+        screen.blit(pygame.transform.scale_by(test, 3), (100, 100), pygame.Rect(470*3, 272*3, 45, 45))
         if self.facing == 0:
             screen.blit(self.characterN, (screen.get_width() / 2 - self.characterN.get_width() / 4, screen.get_height() / 2 - self.characterN.get_height()), rect)
         elif self.facing == 3:
@@ -62,38 +58,28 @@ class Level:
         elif self.facing == 1:
             screen.blit(self.characterE, (screen.get_width() / 2 - self.characterE.get_width() / 4, screen.get_height() / 2 - self.characterE.get_height()), rect)
 
-    def walk(self, screen):
-        print(self.coords)
+    def walk(self):
         if self.facing == 0:
-            self.coords[1] += 1
+            self.coords[1] += 8
         if self.facing == 1:
-            self.coords[0] += 1
+            self.coords[0] += 8
         if self.facing == 2:
-            self.coords[1] -= 1
+            self.coords[1] -= 8
         if self.facing == 3:
-            self.coords[0] -= 1
-        self.check_for_items(screen)
+            self.coords[0] -= 8
 
 
     def check_for_items(self, screen):
-        all_obj = []
-        for i in range(20):
-#            print(i, "IIII")
-            for j in range(20):
-                obj_name = self.map[min(max(self.coords[0] + i - 8, 0), 14), min(max(self.coords[1] + (j - 8), 0), 14)]
-                if obj_name != '':
-                    all_obj.append((pygame.image.load("tileBaseTileset.png"), (self.coords[1] + i - 8, self.coords[0] + (j - 8)), self.objects[obj_name][1]))
-#        screen.blits(all_obj)
-        for i in all_obj:
-            screen.blit(i[0], (i[1][0]*10, i[1][1]*10), i[2])
-               
-    def sixteenSegment(self, location, object, screen):
-#        print(object)
-        screen.blit(pygame.image.load("tileBaseTileset.png"), location, object)
-        screen.blit(pygame.image.load("tileBaseTileset.png"), (location[0], location[1] + 16), object)
-        screen.blit(pygame.image.load("tileBaseTileset.png"), (location[0] + 16, location[1]), object)
-        screen.blit(pygame.image.load("tileBaseTileset.png"), (location[0] + 16, location[1] + 16), object)
-        
+        in_range = []
+        for key in self.objects:
+            for i in self.objects[key][0]:
+                # test for objects in range
+                if not self.objects[key][1]:
+                    if self.coords[0] +408 >= i[0] and self.coords[0] - 408 <= i[0] and self.coords[1] + 408 >= i[1] and self.coords[1] - 408 <= i[1]:
+                        screen.blit(pygame.transform.scale_by(pygame.image.load(self.objects[key][2]), 3), (i[0] + 408 - self.coords[0], i[1] + 408 + self.coords[1]))
+                else:
+                    if self.coords[0] +408 >= i[0] and self.coords[0] - 408 <= i[0] and self.coords[1] + 408 >= i[1] and self.coords[1] - 408 <= i[1]:
+                        screen.blit(pygame.transform.scale_by(TILE_SET_LOCATION, 3), (i[0] + 408 - self.coords[0], i[1] + 408 + self.coords[1]))
 
 
 

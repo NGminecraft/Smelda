@@ -22,15 +22,13 @@ class Level:
         self.characterW = pygame.image.load(
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkW.png")
         self.objects = self.initialize_dict()
-        tileset = pygame.image.load(TILE_SET_LOCATION)
         self.items = {
-            "Wall": tileset.subsurface(pygame.Rect(25, 63, 30, 30)),
-            "Cabinet": tileset.subsurface(pygame.Rect(513, 257, 30, 30)),
-            "Counter": tileset.subsurface(pygame.Rect(545, 257, 30, 30)),
-            '': tileset.subsurface(pygame.Rect(238, 100, 30, 30)),
-            "Stash1": tileset.subsurface(pygame.Rect(370, 255, 30, 30))
+            "Wall": (pygame.Rect(25, 63, 30, 30), False),
+            "Cabinet": (pygame.Rect(513, 257, 30, 30), False),
+            "Counter": (pygame.Rect(545, 257, 30, 30), False),
+            '': (pygame.Rect(238, 100, 30, 30), False),
+            "Stash1": (pygame.Rect(370, 255, 30, 30), False)
         }
-        print(type(self.items["Wall"]))
         print(self.objects[(0, 0)])
         self.facing = 2
         self.walkKeyframe = 0
@@ -93,8 +91,21 @@ class Level:
 
     def check_for_items(self, screen):
         try:
-            for key in self.objects: 
-                screen.blit(self.items[key], (key[0] + 208 - self.coords[0], key[1] + 208 + self.coords[1]))
+            for key in self.objects:
+                if not self.items[self.objects[key]][1]:
+                    screen.blit(pygame.image.load("tileBaseTileset.png"),
+                                (key[0] + 208 - self.coords[0], key[1] + 208 + self.coords[1]),
+                                self.items[self.objects[key]][0])
+                else:
+                    rect = copy.deepcopy(self.items[self.objects[key]][0])
+                    rect.width = rect.width * 1.875
+                    rect.height = rect.height * 1.875
+                    rect.topleft = (rect.left * 1.875, rect.top * 1.875)
+                    rect = (rect.x, rect.y, rect.w, rect.h)
+                    print(rect)
+                    screen.blit(pygame.transform.scale(pygame.image.load("tileBaseTileset.png"),
+                                                       self.items[self.objects[key]][1]),
+                                (key[0] + 208 - self.coords[0], key[1] + 208 + self.coords[1]), rect)
         except KeyError:
             pass
 

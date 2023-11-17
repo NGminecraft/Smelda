@@ -22,6 +22,7 @@ class Level:
         self.characterW = pygame.image.load(
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkW.png")
         self.objects = self.initialize_dict()
+        print(self.objects)
         tileset = pygame.image.load(TILE_SET_LOCATION)
         self.items = {
             "Wall": tileset.subsurface(pygame.Rect(25, 63, 30, 30)),
@@ -92,11 +93,8 @@ class Level:
         print(self.coords)
 
     def check_for_items(self, screen):
-        try:
-            for key in self.objects: 
-                screen.blit(self.items[key], (key[0] + 208 - self.coords[0], key[1] + 208 + self.coords[1]))
-        except KeyError:
-            pass
+        for key in self.objects:
+            screen.blit(self.items[self.objects[key]], (key[0] + 208 - self.coords[0], key[1] + 208 + self.coords[1]))
 
 
 # This is so it always runs the game file even if I accidentaly try to run this onex                c

@@ -14,7 +14,18 @@ while True:
     try:
         for i, v in enumerate(pressed):
             if v:
-                print(i)
+                if i == 22:
+                    level.facing = 2
+                    level.walk()
+                if i == 7:
+                    level.facing = 1
+                    level.walk()
+                if i == 4:
+                    level.facing = 3
+                    level.walk()
+                if i == 26:
+                    level.facing = 0
+                    level.walk()
     except:
         pass
     level.draw_background(screen)
@@ -22,23 +33,8 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
-        if pressed[26]:
-            level.facing = 0
-            walking = True
-        elif pressed[7]:
-            level.facing = 1
-            walking = True
-        elif pressed[22]:
-            level.facing = 2
-            walking = True
-        elif pressed[3]:
-            level.facing = 3
-            walking = True
-        else:
-            walking = False
-    if walking:
-        level.walk()
-    
+            
+            
     level.check_for_items(screen)
     level.draw_character(screen)
     pygame.display.update()

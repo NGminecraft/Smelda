@@ -83,13 +83,13 @@ class Level:
 
     def walk(self):
         if self.facing == 0:
-            self.coords[1] += 8
+            self.coords[1] += 4
         if self.facing == 1:
-            self.coords[0] += 8
+            self.coords[0] += 4
         if self.facing == 2:
-            self.coords[1] -= 8
+            self.coords[1] -= 4
         if self.facing == 3:
-            self.coords[0] -= 8
+            self.coords[0] -= 4
         print(self.coords)
 
     def check_for_items(self, screen):

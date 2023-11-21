@@ -24,13 +24,13 @@ class Player():
         if self.facing == 3:
             self.coords[0] -= 4
             
-    def get_player(self, screen, keyframe = 0):
+    def get_player(self, screen, keyframe = 1):
         rect = pygame.Rect(0 + 46*keyframe, 0+46*keyframe, 46 * 3, 46 * 3)
         center = (screen.get_width() / 2 - self.characterN.get_width() / 4, screen.get_height() / 2 - self.characterN.get_height())
         print(self.characterN.get_height(), self.characterN.get_width())
         print(rect)
         if keyframe == 1:
-            rect = pygame.Rect(self.characterN.get_height() / 2, self.characterN.get_height(), 288, 288)
+            rect = pygame.Rect(pygame.Rect(self.characterN.get_height() / 2, self.characterN.get_height(), 288, 288))
         if self.facing == 0:
             return self.characterN.subsurface(rect)
         elif self.facing == 3:

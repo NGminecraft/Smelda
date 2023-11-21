@@ -9,7 +9,8 @@ TILE_SET_LOCATION = "tileBaseTileset.png"
 
 
 class Level:
-    def __init__(self):
+    def __init__(self, player):
+        self.player = player
         self.font = pygame.font.SysFont(None, 48)
         self.backdrop = pygame.surfarray.make_surface(self.initialize_background())
         self.backdrop = pygame.transform.scale(self.backdrop, (816, 816))
@@ -65,22 +66,21 @@ class Level:
         screen.blit(self.backdrop, (0, 0))
         screen.blit(self.font.render(str(self.coords), (255, 0, 0), (0, 0, 0)), (0, 10))
 
-    def draw_character(self, screen):
-        # Image is (96, 48) pixels
+    def draw_character(self, screen, keyframe):
         rect = pygame.Rect(0, 0, 46 * 3, 46 * 3)
-        if self.facing == 0:
-            screen.blit(self.characterN, (screen.get_width() / 2 - self.characterN.get_width() / 4,
-                                          screen.get_height() / 2 - self.characterN.get_height()), rect)
-        elif self.facing == 3:
-            screen.blit(self.characterW, (screen.get_width() / 2 - self.characterW.get_width() / 4,
-                                          screen.get_height() / 2 - self.characterW.get_height()), rect)
-        elif self.facing == 2:
-            screen.blit(self.characterS, (screen.get_width() / 2 - self.characterS.get_width() / 4,
-                                          screen.get_height() / 2 - self.characterS.get_height()), rect)
-        elif self.facing == 1:
-            screen.blit(self.characterE, (screen.get_width() / 2 - self.characterE.get_width() / 4,
-                                          screen.get_height() / 2 - self.characterE.get_height()), rect)
-
+        center = (screen.get_width() / 2 - self.characterN.get_width() / 4, screen.get_height() / 2 - self.characterN.get_height())
+        screen.blit(self.player.get_player(screen, keyframe), center)
+        # Image is (96, 48) pixels
+#        
+#        if self.facing == 0:
+#            screen.blit(self.characterN, center, rect)
+#        elif self.facing == 3:
+#            screen.blit(self.characterW, center, rect)
+#        elif self.facing == 2:
+#            screen.blit(self.characterS, center, rect)
+#        elif self.facing == 1:
+#            screen.blit(self.characterE, center, rect)
+#
     def walk(self):
         if self.facing == 0:
             self.coords[1] += 4

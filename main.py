@@ -16,17 +16,17 @@ while True:
         for i, v in enumerate(pressed):
             if v:
                 if i == 22:
-                    level.facing = 2
-                    level.walk()
+                    main_actor.facing = 2
+                    main_actor.walk()
                 if i == 7:
-                    level.facing = 1
-                    level.walk()
+                    main_actor.facing = 1
+                    main_actor.walk()
                 if i == 4:
-                    level.facing = 3
-                    level.walk()
+                    main_actor.facing = 3
+                    main_actor.walk()
                 if i == 26:
-                    level.facing = 0
-                    level.walk()
+                    main_actor.facing = 0
+                    main_actor.walk()
     except:
         pass
     level.draw_background(screen)
@@ -37,7 +37,6 @@ while True:
             
             
     level.check_for_items(screen)
-#    level.draw_character(screen, 1)
-    main_actor.get_player(screen, keyframe=1)
+    level.draw_character(screen, 0)
     pygame.display.update()
     clock.tick(100)

@@ -13,6 +13,7 @@ class Player():
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkS.png"), 3)
         self.characterW = pygame.transform.scale_by(pygame.image.load(
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkW.png"), 3)
+        self.walking_animation = 1
         
     def walk(self):
         if self.facing == 0:
@@ -23,14 +24,19 @@ class Player():
             self.coords[1] -= 4
         if self.facing == 3:
             self.coords[0] -= 4
+        self.walking_animation += 0.05
             
-    def get_player(self, screen, keyframe = 1):
-        rect = pygame.Rect(0 + 46*keyframe, 0+46*keyframe, 46 * 3, 46 * 3)
-        center = (screen.get_width() / 2 - self.characterN.get_width() / 4, screen.get_height() / 2 - self.characterN.get_height())
-        print(self.characterN.get_height(), self.characterN.get_width())
-        print(rect)
-        if keyframe == 1:
-            rect = pygame.Rect(pygame.Rect(self.characterN.get_height() / 2, self.characterN.get_height(), 288, 288))
+    def get_player(self, keyframe = False):
+        if self.walking_animation >= 1 and not keyframe:
+            self.walking_animation = 0
+        elif keyframe:
+            self.walking_animation = keyframe
+        
+        if self.walking_animation >= 0.5:
+            keyframe = 1
+        else:
+            keyframe = 0
+        rect = pygame.Rect(pygame.Rect(keyframe*(self.characterN.get_width() / 2), 0, self.characterN.get_width() / 2, self.characterN.get_height()))
         if self.facing == 0:
             return self.characterN.subsurface(rect)
         elif self.facing == 3:
@@ -39,6 +45,9 @@ class Player():
             return self.characterS.subsurface(rect)
         elif self.facing == 1:
             return self.characterE.subsurface(rect)
+    
+    def get_coords(self):
+        return self.coords
             
 if __name__ == "__main__":
     import main

@@ -67,34 +67,14 @@ class Level:
         screen.blit(self.font.render(str(self.coords), (255, 0, 0), (0, 0, 0)), (0, 10))
 
     def draw_character(self, screen, keyframe):
-        rect = pygame.Rect(0, 0, 46 * 3, 46 * 3)
         center = (screen.get_width() / 2 - self.characterN.get_width() / 4, screen.get_height() / 2 - self.characterN.get_height())
-        screen.blit(self.player.get_player(screen, keyframe), center)
-        # Image is (96, 48) pixels
-#        
-#        if self.facing == 0:
-#            screen.blit(self.characterN, center, rect)
-#        elif self.facing == 3:
-#            screen.blit(self.characterW, center, rect)
-#        elif self.facing == 2:
-#            screen.blit(self.characterS, center, rect)
-#        elif self.facing == 1:
-#            screen.blit(self.characterE, center, rect)
-#
-    def walk(self):
-        if self.facing == 0:
-            self.coords[1] += 4
-        if self.facing == 1:
-            self.coords[0] += 4
-        if self.facing == 2:
-            self.coords[1] -= 4
-        if self.facing == 3:
-            self.coords[0] -= 4
-        print(self.coords)
+        screen.blit(self.player.get_player(), center)
 
     def check_for_items(self, screen):
+        coords = self.player.get_coords()
+        print(coords)
         for key in self.objects:
-            screen.blit(self.items[self.objects[key]], (key[0] + 208 - self.coords[0], key[1] + 208 + self.coords[1]))
+            screen.blit(self.items[self.objects[key]], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
 
 
 # This is so it always runs the game file even if I accidentaly try to run this onex                c

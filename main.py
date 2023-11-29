@@ -8,7 +8,7 @@ screen = pygame.display.set_mode((816, 816))
 clock = pygame.time.Clock()
 main_actor = player.Player()
 walking = False
-level = lvl.Level(main_actor)
+level = lvl.Level(main_actor, map="map.npy", collision_map="BigMapCollision.npy")
 level.check_for_items(screen)
 while True:
     pressed = pygame.key.get_pressed()
@@ -17,16 +17,16 @@ while True:
             if v:
                 if i == 22:
                     main_actor.facing = 2
-                    main_actor.walk()
+                    main_actor.walk(level)
                 if i == 7:
                     main_actor.facing = 1
-                    main_actor.walk()
+                    main_actor.walk(level)
                 if i == 4:
                     main_actor.facing = 3
-                    main_actor.walk()
+                    main_actor.walk(level)
                 if i == 26:
                     main_actor.facing = 0
-                    main_actor.walk()
+                    main_actor.walk(level)
     except:
         pass
     level.draw_background(screen)

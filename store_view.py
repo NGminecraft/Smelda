@@ -8,12 +8,13 @@ BACK_COLORS = ((80, 198, 0), (0, 190, 9), (23, 198, 0))
 TILE_SET_LOCATION = "tileBaseTileset.png"
 
 
+
 class Level:
-    def __init__(self, player):
+    def __init__(self, player, map="map.npy", collision_map="BigMapCollision"):
+        self.map = map
+        self.collision_map = collision_map
         self.player = player
-        self.font = pygame.font.SysFont(None, 48)
         self.backdrop = pygame.surfarray.make_surface(self.initialize_background())
-        self.backdrop = pygame.transform.scale(self.backdrop, (816, 816))
         self.characterN = pygame.image.load(
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkN.png")
         self.characterE = pygame.image.load(
@@ -22,8 +23,8 @@ class Level:
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkS.png")
         self.characterW = pygame.image.load(
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkW.png")
-        self.objects = self.initialize_dict()
-        print(self.objects)
+        self.objects = self.initilize_map_dict()
+        self.collision = self.initialize_collision()
         tileset = pygame.image.load(TILE_SET_LOCATION)
         self.items = {
             "Wall": tileset.subsurface(pygame.Rect(25, 63, 30, 30)),
@@ -32,11 +33,6 @@ class Level:
             '': tileset.subsurface(pygame.Rect(238, 100, 30, 30)),
             "Stash1": tileset.subsurface(pygame.Rect(370, 255, 30, 30))
         }
-        print(type(self.items["Wall"]))
-        print(self.objects[(0, 0)])
-        self.facing = 2
-        self.walkKeyframe = 0
-        self.coords = [0, 0]
         self.resize()
 
     def resize(self):
@@ -44,11 +40,20 @@ class Level:
         self.characterE = pygame.transform.scale_by(self.characterE, 3)
         self.characterS = pygame.transform.scale_by(self.characterS, 3)
         self.characterW = pygame.transform.scale_by(self.characterW, 3)
+        self.backdrop = pygame.transform.scale(self.backdrop, (816, 816))
 
-    def initialize_dict(self):
-        arr = numpy.load("map3.npy")
+    def initilize_map_dict(self):
+        arr = numpy.load(self.map)
         dictionary = {}
         for row_num, row in enumerate(arr):
+            for column_num, column in enumerate(row):
+                dictionary[(row_num * 30, column_num * 30)] = column
+        return dictionary
+    
+    def initialize_collision(self):
+        carr = numpy.load(self.collision_map)
+        dictionary = {}
+        for row_num, row in enumerate(carr):
             for column_num, column in enumerate(row):
                 dictionary[(row_num * 30, column_num * 30)] = column
         return dictionary
@@ -64,37 +69,19 @@ class Level:
 
     def draw_background(self, screen):
         screen.blit(self.backdrop, (0, 0))
-        screen.blit(self.font.render(str(self.coords), (255, 0, 0), (0, 0, 0)), (0, 10))
 
     def draw_character(self, screen, keyframe):
-        rect = pygame.Rect(0, 0, 46 * 3, 46 * 3)
         center = (screen.get_width() / 2 - self.characterN.get_width() / 4, screen.get_height() / 2 - self.characterN.get_height())
-        screen.blit(self.player.get_player(screen, keyframe), center)
-        # Image is (96, 48) pixels
-#        
-#        if self.facing == 0:
-#            screen.blit(self.characterN, center, rect)
-#        elif self.facing == 3:
-#            screen.blit(self.characterW, center, rect)
-#        elif self.facing == 2:
-#            screen.blit(self.characterS, center, rect)
-#        elif self.facing == 1:
-#            screen.blit(self.characterE, center, rect)
-#
-    def walk(self):
-        if self.facing == 0:
-            self.coords[1] += 4
-        if self.facing == 1:
-            self.coords[0] += 4
-        if self.facing == 2:
-            self.coords[1] -= 4
-        if self.facing == 3:
-            self.coords[0] -= 4
-        print(self.coords)
+        screen.blit(self.player.get_player(), center)
 
     def check_for_items(self, screen):
+        coords = self.player.get_coords()
         for key in self.objects:
-            screen.blit(self.items[self.objects[key]], (key[0] + 208 - self.coords[0], key[1] + 208 + self.coords[1]))
+            screen.blit(self.items[self.objects[key]], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
+            
+    def check_collision(self, coords):
+        print(self.collision[(coords[0]-(coords[0]%30), coords[1]-(coords[1]%30))])
+        return self.collision[(coords[0]-(coords[0]%30), coords[1]-(coords[1]%30))]
 
 
 # This is so it always runs the game file even if I accidentaly try to run this onex                c

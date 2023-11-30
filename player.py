@@ -32,6 +32,9 @@ class Player():
         if keyframe == 1:
             rect = pygame.Rect(pygame.Rect(self.characterN.get_height() / 2, self.characterN.get_height(), 288, 288))
         if self.facing == 0:
+            print(rect)
+            print(self.characterN.get_height())
+            print(self.characterW.get_width())
             return self.characterN.subsurface(rect)
         elif self.facing == 3:
             return self.characterW.subsurface(rect)

@@ -78,10 +78,22 @@ class Level:
         coords = self.player.get_coords()
         for key in self.objects:
             screen.blit(self.items[self.objects[key]], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
+        for key in self.collision:
+            if self.collision[key] == "TRUE":
+                screen.blit(pygame.image.load("Legend_of_Zink_Asset_Pack\Legend_of_Zink_Asset_Pack\Props\PNG\sprPurpleBlock.png"), (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
             
     def check_collision(self, coords):
-        print(coords[0]-(coords[0]%30), coords[1]-(coords[1]%30))
-        return self.collision[(coords[0] -(coords[0]%30), coords[1] -(coords[1]%30))]
+        tile = (coords[0] + 208 - coords[0], coords[1] + 208 + coords[1])
+        tile = (coords[0]-(coords[0]%30), coords[1]-(coords[1]%30))
+        print(tile, coords, self.collision[tile])
+        try:
+            collision = self.collision[tile]
+            if collision == "TRUE":
+                return True
+            else:
+                return False
+        except:
+            return False
 
 
 # This is so it always runs the game file even if I accidentaly try to run this onex                c

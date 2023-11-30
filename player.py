@@ -18,6 +18,7 @@ class Player():
     def walk(self, map):
         if self.facing == 0:
             if map.check_collision((self.coords[0], self.coords[1] + 4)):
+                print("up")
                 self.coords[1] += 4
         if self.facing == 1:
             if map.check_collision((self.coords[0] + 4, self.coords[1])):

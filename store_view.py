@@ -12,6 +12,7 @@ TILE_SET_LOCATION = "tileBaseTileset.png"
 class Level:
     def __init__(self, player, map="map.npy", collision_map="BigMapCollision"):
         self.logger = logging.getLogger(__name__)
+        self.keyframe = 1
         self.map = map
         self.collision_map = collision_map
         self.player = player
@@ -28,11 +29,23 @@ class Level:
         self.collision = self.initialize_collision()
         tileset = pygame.image.load(TILE_SET_LOCATION)
         self.items = {
-            "Wall": tileset.subsurface(pygame.Rect(25, 63, 30, 30)),
+            "Wall": pygame.transform.scale(tileset.subsurface(pygame.Rect(465, 272, 15, 15)), (30, 30)),
             "Cabinet": tileset.subsurface(pygame.Rect(513, 257, 30, 30)),
             "Counter": tileset.subsurface(pygame.Rect(545, 257, 30, 30)),
-            '': tileset.subsurface(pygame.Rect(238, 100, 30, 30)),
-            "Stash1": tileset.subsurface(pygame.Rect(370, 255, 30, 30))
+            '': pygame.transform.scale(tileset.subsurface(pygame.Rect(659, 305, 29, 29)), (30, 30)),
+            "Stash1": tileset.subsurface(pygame.Rect(370, 255, 30, 30)),
+            "TorchN1": pygame.transform.scale(tileset.subsurface(pygame.Rect(737, 356, 15, 30)), (30, 30)),
+            "TorchN2": pygame.transform.scale(tileset.subsurface(pygame.Rect(753, 356, 15, 30)), (30, 30)),
+            "TorchN3": pygame.transform.scale(tileset.subsurface(pygame.Rect(769, 356, 15, 30)), (30, 30)),
+            "TorchN4": pygame.transform.scale(tileset.subsurface(pygame.Rect(785, 356, 15, 30)), (30, 30)),
+            "TorchS1": pygame.transform.scale(tileset.subsurface(pygame.Rect(737, 386, 15, 30)), (30, 30)),
+            "TorchS2": pygame.transform.scale(tileset.subsurface(pygame.Rect(753, 386, 15, 30)), (30, 30)),
+            "TorchS3": pygame.transform.scale(tileset.subsurface(pygame.Rect(769, 386, 15, 30)), (30, 30)),
+            "TorchS4": pygame.transform.scale(tileset.subsurface(pygame.Rect(785, 386, 15, 30)), (30, 30)),
+            "FloorTorch1": pygame.transform.scale(tileset.subsurface(pygame.Rect(736, 320, 15, 15)), (30, 30)),
+            "FloorTorch4": pygame.transform.scale(tileset.subsurface(pygame.Rect(784, 320, 15, 15)), (30, 30)),
+            "FloorTorch3": pygame.transform.scale(tileset.subsurface(pygame.Rect(768, 320, 15, 15)), (30, 30)),
+            "FloorTorch2": pygame.transform.scale(tileset.subsurface(pygame.Rect(752, 320, 15, 15)), (30, 30))
         }
         self.resize()
 
@@ -78,18 +91,26 @@ class Level:
     def check_for_items(self, screen):
         coords = self.player.get_coords()
         for key in reversed(self.objects):
-            screen.blit(self.items[self.objects[key]], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
+            try:
+                screen.blit(self.items[self.objects[key]], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
+            except KeyError:
+                self.keyframe += 0.006
+                object = self.objects[key]
+                object += str(round(self.keyframe))
+                try:
+                    screen.blit(self.items[object], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
+                except KeyError:
+                    self.keyframe = 0.9
+                
 #        for key in self.collision:
 #            if self.collision[key] == "TRUE":
 #                screen.blit(pygame.image.load("Legend_of_Zink_Asset_Pack\Legend_of_Zink_Asset_Pack\Props\PNG\sprPurpleBlock.png"), (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
             
     def check_collision(self, coords, screen):
-        tile = (coords[0]- coords[0] % 30 + 210, coords[1] - coords[1] % 30+(480*3)-60)
-        print(tile, coords)
+        tile = (coords[0]- coords[0] % 30 + 210, coords[1] - coords[1] % 30+(480*3)-90)
         try:
-            print(tile, coords, self.collision[tile])
             collision = self.collision[tile]
-            print(self.collision[tile], print(self.objects[tile]))
+            print(tile, self.objects[tile])
             if collision == "TRUE":
                 return True
             else:

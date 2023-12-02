@@ -17,16 +17,16 @@ class Player():
         
     def walk(self, map, screen):
         if self.facing == 0:
-            if not map.check_collision((self.coords[0], self.coords[1] + 4), screen):
+            if not map.check_collision((self.coords[0], self.coords[1] + 30), screen):
                 self.coords[1] += 4
         if self.facing == 1:
-            if not map.check_collision((self.coords[0] + 4, self.coords[1]), screen):
+            if not map.check_collision((self.coords[0] + 8, self.coords[1]), screen):
                 self.coords[0] += 4
         if self.facing == 2:
             if not map.check_collision((self.coords[0], self.coords[1] - 4), screen):
                 self.coords[1] -= 4
         if self.facing == 3:
-            if not map.check_collision((self.coords[0] - 4, self.coords[1]), screen):
+            if not map.check_collision((self.coords[0] - 30, self.coords[1]), screen):
                 self.coords[0] -= 4
         self.walking_animation += 0.05
             

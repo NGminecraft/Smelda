@@ -17,16 +17,16 @@ while True:
             if v:
                 if i == 22:
                     main_actor.facing = 2
-                    main_actor.walk(level)
+                    main_actor.walk(level, screen)
                 if i == 7:
                     main_actor.facing = 1
-                    main_actor.walk(level)
+                    main_actor.walk(level, screen)
                 if i == 4:
                     main_actor.facing = 3
-                    main_actor.walk(level)
+                    main_actor.walk(level, screen)
                 if i == 26:
                     main_actor.facing = 0
-                    main_actor.walk(level)
+                    main_actor.walk(level, screen)
     except:
         pass
     level.draw_background(screen)

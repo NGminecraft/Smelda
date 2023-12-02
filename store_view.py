@@ -1,7 +1,7 @@
 import pygame
 import numpy
 import random
-import copy
+import logging
 
 # colors that the background creator pulls from
 BACK_COLORS = ((80, 198, 0), (0, 190, 9), (23, 198, 0))
@@ -11,6 +11,7 @@ TILE_SET_LOCATION = "tileBaseTileset.png"
 
 class Level:
     def __init__(self, player, map="map.npy", collision_map="BigMapCollision"):
+        self.logger = logging.getLogger(__name__)
         self.map = map
         self.collision_map = collision_map
         self.player = player
@@ -45,16 +46,16 @@ class Level:
     def initilize_map_dict(self):
         arr = numpy.load(self.map)
         dictionary = {}
-        for row_num, row in enumerate(arr):
-            for column_num, column in enumerate(row):
+        for row_num, row in enumerate(reversed(arr)):
+            for column_num, column in enumerate(reversed(row)):
                 dictionary[(row_num * 30, column_num * 30)] = column
         return dictionary
     
     def initialize_collision(self):
         carr = numpy.load(self.collision_map)
         dictionary = {}
-        for row_num, row in enumerate(carr):
-            for column_num, column in enumerate(row):
+        for row_num, row in enumerate(reversed(carr)):
+            for column_num, column in enumerate(reversed(row)):
                 dictionary[(row_num * 30, column_num * 30)] = column
         return dictionary
 
@@ -76,24 +77,25 @@ class Level:
 
     def check_for_items(self, screen):
         coords = self.player.get_coords()
-        for key in self.objects:
+        for key in reversed(self.objects):
             screen.blit(self.items[self.objects[key]], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
-        for key in self.collision:
-            if self.collision[key] == "TRUE":
-                screen.blit(pygame.image.load("Legend_of_Zink_Asset_Pack\Legend_of_Zink_Asset_Pack\Props\PNG\sprPurpleBlock.png"), (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
+#        for key in self.collision:
+#            if self.collision[key] == "TRUE":
+#                screen.blit(pygame.image.load("Legend_of_Zink_Asset_Pack\Legend_of_Zink_Asset_Pack\Props\PNG\sprPurpleBlock.png"), (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
             
-    def check_collision(self, coords):
-        tile = (coords[0] + 208 - coords[0], coords[1] + 208 + coords[1])
-        tile = (coords[0]-(coords[0]%30), coords[1]-(coords[1]%30))
-        print(tile, coords, self.collision[tile])
+    def check_collision(self, coords, screen):
+        tile = (coords[0]- coords[0] % 30 + 210, coords[1] - coords[1] % 30+(480*3)-60)
+        print(tile, coords)
         try:
+            print(tile, coords, self.collision[tile])
             collision = self.collision[tile]
+            print(self.collision[tile], print(self.objects[tile]))
             if collision == "TRUE":
                 return True
             else:
                 return False
-        except:
-            return False
+        except KeyError:
+            self.logger.warning(f"Out of Bounds collision checking at {tile}")
 
 
 # This is so it always runs the game file even if I accidentaly try to run this onex                c

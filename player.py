@@ -2,7 +2,7 @@ import pygame
 
 class Player():
     def __init__(self):
-        self.coords = [100, 80]
+        self.coords = [60, 80]
         self.facing = 0
         self.walk_speed = 4
         self.characterN = pygame.transform.scale_by(pygame.image.load(
@@ -15,19 +15,18 @@ class Player():
             "Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/Zink/PNG/Zink_Only/sprZinkWalkW.png"), 3)
         self.walking_animation = 1
         
-    def walk(self, map):
+    def walk(self, map, screen):
         if self.facing == 0:
-            if not map.check_collision((self.coords[0], self.coords[1] + 4)):
-                print("up")
+            if not map.check_collision((self.coords[0], self.coords[1] + 4), screen):
                 self.coords[1] += 4
         if self.facing == 1:
-            if not map.check_collision((self.coords[0] + 4, self.coords[1])):
+            if not map.check_collision((self.coords[0] + 4, self.coords[1]), screen):
                 self.coords[0] += 4
         if self.facing == 2:
-            if not map.check_collision((self.coords[0], self.coords[1] - 4)):
+            if not map.check_collision((self.coords[0], self.coords[1] - 4), screen):
                 self.coords[1] -= 4
         if self.facing == 3:
-            if not map.check_collision((self.coords[0] - 4, self.coords[1])):
+            if not map.check_collision((self.coords[0] - 4, self.coords[1]), screen):
                 self.coords[0] -= 4
         self.walking_animation += 0.05
             

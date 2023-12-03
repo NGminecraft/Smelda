@@ -28,6 +28,8 @@ class Level:
         self.objects = self.initilize_map_dict()
         self.collision = self.initialize_collision()
         tileset = pygame.image.load(TILE_SET_LOCATION)
+        self.frogNPC = pygame.image.load("Legend_of_Zink_Asset_Pack/Legend_of_Zink_Asset_Pack/NPCs/PNG/sprToadEatWithTongue.png")
+        print(self.frogNPC.get_width())
         self.items = {
             "Wall": pygame.transform.scale(tileset.subsurface(pygame.Rect(465, 272, 15, 15)), (30, 30)),
             "Cabinet": tileset.subsurface(pygame.Rect(513, 257, 30, 30)),
@@ -45,7 +47,12 @@ class Level:
             "FloorTorch1": pygame.transform.scale(tileset.subsurface(pygame.Rect(736, 320, 15, 15)), (30, 30)),
             "FloorTorch4": pygame.transform.scale(tileset.subsurface(pygame.Rect(784, 320, 15, 15)), (30, 30)),
             "FloorTorch3": pygame.transform.scale(tileset.subsurface(pygame.Rect(768, 320, 15, 15)), (30, 30)),
-            "FloorTorch2": pygame.transform.scale(tileset.subsurface(pygame.Rect(752, 320, 15, 15)), (30, 30))
+            "FloorTorch2": pygame.transform.scale(tileset.subsurface(pygame.Rect(752, 320, 15, 15)), (30, 30)),
+            "Frog1": pygame.transform.scale(self.frogNPC.subsurface(pygame.Rect(0, 0, 24, 24)), (30, 30)),
+            "Frog2": pygame.transform.scale(self.frogNPC.subsurface(pygame.Rect(24, 0, 24, 24)), (30, 30)),
+            "Frog3": pygame.transform.scale(self.frogNPC.subsurface(pygame.Rect(48, 0, 24, 24)), (30, 30)),
+            "Frog4": pygame.transform.scale(self.frogNPC.subsurface(pygame.Rect(72, 0, 24, 24)), (30, 30))
+            
         }
         self.resize()
 
@@ -83,6 +90,7 @@ class Level:
 
     def draw_background(self, screen):
         screen.blit(self.backdrop, (0, 0))
+        screen.blit(self.frogNPC.subsurface(0, 0, 24, 24), (0,0))
 
     def draw_character(self, screen, keyframe):
         center = (screen.get_width() / 2 - self.characterN.get_width() / 4, screen.get_height() / 2 - self.characterN.get_height())
@@ -101,16 +109,12 @@ class Level:
                     screen.blit(self.items[object], (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
                 except KeyError:
                     self.keyframe = 0.9
-                
-#        for key in self.collision:
-#            if self.collision[key] == "TRUE":
-#                screen.blit(pygame.image.load("Legend_of_Zink_Asset_Pack\Legend_of_Zink_Asset_Pack\Props\PNG\sprPurpleBlock.png"), (key[0] + 208 - coords[0], key[1] + 208 + coords[1]))
-            
+                               
     def check_collision(self, coords, screen):
         tile = (coords[0]- coords[0] % 30 + 210, coords[1] - coords[1] % 30+(480*3)-90)
+        print(f"Checking for items at {tile}, And your at {coords}.")
         try:
             collision = self.collision[tile]
-            print(tile, self.objects[tile])
             if collision == "TRUE":
                 return True
             else:
